@@ -1,0 +1,65 @@
+.movie-card {
+  width: 100%;
+  max-width: 24rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: var(--color-background);
+  overflow-wrap: anywhere;
+}
+
+.movie-card-poster {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-medium) var(--radius-medium) 0 0;
+}
+
+.movie-card-content {
+  padding: clamp(1rem, 3vw, 1.5rem);
+}
+
+.movie-card h3 {
+  font-size: 1.5rem;
+  line-height: 1.25;
+}
+
+.movie-card-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-medium);
+  margin: 0 0 var(--space-large);
+}
+
+.movie-card-details dt {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.movie-card-details dd {
+  margin: var(--space-small) 0 0;
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.movie-card h4 {
+  margin: 0 0 var(--space-small);
+  font-size: 1rem;
+}
+
+.movie-card-showtimes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-small);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.movie-card-showtimes time {
+  display: block;
+  padding: var(--space-small) var(--space-medium);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: var(--color-surface);
+  font-variant-numeric: tabular-nums;
+}
