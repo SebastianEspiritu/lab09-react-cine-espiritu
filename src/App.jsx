@@ -1,7 +1,7 @@
-import Header from './components/Header.jsx'
-import Footer from './components/Footer.jsx'
-import Hero from './components/Hero.jsx'
-import MovieList from './components/MovieList.jsx'
+import Header from './components/Header/Header.jsx'
+import Footer from './components/Footer/Footer.jsx'
+import Hero from './components/Hero/Hero.jsx'
+import MovieList from './components/MovieList/MovieList.jsx'
 import movies from './data/movies.js'
 
 function App() {
