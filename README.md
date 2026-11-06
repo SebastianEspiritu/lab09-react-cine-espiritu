@@ -1,6 +1,6 @@
 # Laboratorio 09 - Cinema Espiritu
 
-Proyecto de React y Vite desarrollado por etapas. La etapa 6 presenta las ocho películas mediante MovieList y MovieCard, conservando Header, Hero, Footer y la navegación.
+Proyecto de React y Vite desarrollado por etapas. La etapa 7 documenta tres errores intencionales de JSX y React, ya corregidos. La aplicación conserva las ocho películas mediante MovieList y MovieCard, además de Header, Hero, Footer y la navegación.
 
 ## Ejecución
 
@@ -25,6 +25,7 @@ Abrir la URL indicada por Vite en la terminal. Para compilar: `npm run build`. P
 - `src/styles/base.css`: reglas globales y accesibilidad del foco.
 - `src/styles/layout.css`: altura de la aplicación y contenedor adaptable.
 - `public/images/movies/`: ocho afiches SVG originales y locales, sin dependencias de servicios externos.
+- `docs/evidence/jsx-errors.md`: reproducción de los tres casos solicitados, con archivo, línea, código incorrecto, mensaje real, explicación y solución.
 
 ## Datos de demostración
 
@@ -53,3 +54,9 @@ La tarjeta usa `article`, títulos jerárquicos, texto alternativo y una lista d
 La sección conserva `id="now-showing"` como destino de los enlaces de Header y Hero y tiene un título `h2`. La cuadrícula CSS distribuye las ocho tarjetas en tantas columnas como permita el espacio disponible y se reduce a una columna en pantallas pequeñas. Cada tarjeta conserva su afiche, título, clasificación, valoración y horarios. No se agregaron dependencias ni se realizaron las pruebas intencionales de errores JSX.
 
 Validación de la etapa: `npm run build`, `npm run lint` y `git diff --check` correctos. También se comprobó el HTML generado por React desde App: ocho tarjetas con sus afiches, títulos, clasificaciones, valoraciones y 24 horarios; identificadores accesibles únicos y destinos de navegación conservados, sin advertencias durante el renderizado. Esta comprobación no sustituye una revisión visual en navegador.
+
+## Etapa 7: Errores JSX y React
+
+Se reprodujeron por separado `class` en lugar de `className`, dos elementos JSX raíz adyacentes y la ausencia de `key` en el `map` de MovieList. Cada modificación se restauró antes de continuar. Los casos primero y tercero produjeron advertencias reales de React en desarrollo; el segundo detuvo la compilación de Vite.
+
+Las [evidencias completas](docs/evidence/jsx-errors.md) registran los mensajes capturados en terminal, el contexto y la corrección. No son capturas del navegador. Al finalizar se verificaron nuevamente las ocho tarjetas y sus 24 horarios contra los datos originales, sin advertencias durante el renderizado. No quedaron cambios en el código de la aplicación ni se agregaron dependencias.
