@@ -1,0 +1,19 @@
+.movie-list {
+  padding-block: var(--space-large);
+}
+
+.movie-list h2 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.15;
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--space-large);
+  margin-top: var(--space-large);
+}
+
+.movie-grid .movie-card {
+  max-width: none;
+}
