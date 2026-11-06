@@ -1,16 +1,28 @@
-# React + Vite
+# Laboratorio 09 - Cinema Espiritu
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Proyecto de React y Vite desarrollado por etapas. La etapa 2 organiza los datos y estilos; los componentes de la cartelera siguen pendientes.
 
-Currently, two official plugins are available:
+## Ejecuci?n
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```sh
+npm install
+npm run dev
+```
 
-## React Compiler
+Abrir la URL indicada por Vite en la terminal. Para compilar: `npm run build`. Para revisar el c?digo: `npm run lint`.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Organizaci?n
 
-## Expanding the Oxlint configuration
+- `src/components/`: reservada para los componentes funcionales, con una carpeta por componente en la siguiente etapa.
+- `src/data/movies.js`: ocho pel?culas ficticias con `id`, `title`, `image`, `synopsis`, `classification`, `rating` y `showtimes`.
+- `src/styles/index.css`: entrada de CSS que importa variables, estilos base y distribuci?n general, en ese orden.
+- `src/styles/variables.css`: colores, tipograf?a, espaciado y dimensiones compartidas.
+- `src/styles/base.css`: reglas globales y accesibilidad del foco.
+- `src/styles/layout.css`: altura de la aplicaci?n y contenedor adaptable.
+- `public/images/movies/`: ocho afiches SVG originales y locales, sin dependencias de servicios externos.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Datos de demostraci?n
+
+Los t?tulos, sinopsis, clasificaciones, valoraciones y horarios son ficticios. Las valoraciones usan una escala de 0 a 10; los horarios usan el formato de 24 horas. Cada pel?cula tiene un identificador estable para usarlo como clave al implementar la lista. Las im?genes respetan la ruta base configurada en Vite.
+
+La pantalla actual solo contiene el nombre del cine. No se han implementado Header, Footer, Hero, MovieCard ni MovieList.

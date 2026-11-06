@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="900" viewBox="0 0 600 900" role="img" aria-labelledby="title description">
+  <title id="title">After the Storm</title>
+  <desc id="description">Original geometric poster for the fictional movie After the Storm.</desc>
+  <rect width="600" height="900" fill="#284656"/>
+  <circle cx="360" cy="290" r="160" fill="#b9e6e4" opacity="0.85"/>
+  <path d="M0 580 L220 406 L390 540 L600 370 V900 H0Z" fill="#101218" opacity="0.7"/>
+  <path d="M0 650 L280 460 L600 620 V900 H0Z" fill="#101218" opacity="0.6"/>
+  <text x="48" y="76" fill="#b9e6e4" font-family="sans-serif" font-size="18" letter-spacing="4">CINEMA ESPIRITU</text>
+  <text x="48" y="720" fill="#ffffff" font-family="sans-serif" font-size="44" font-weight="bold">After the</text>
+  <text x="48" y="775" fill="#ffffff" font-family="sans-serif" font-size="44" font-weight="bold">Storm</text>
+  <text x="48" y="845" fill="#b9e6e4" font-family="sans-serif" font-size="16" letter-spacing="3">A FICTIONAL CINEMA STORY</text>
+</svg>

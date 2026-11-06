@@ -1,0 +1,9 @@
+#root {
+  min-height: 100vh;
+}
+
+.container {
+  width: min(var(--content-width), 100% - 2 * var(--space-medium));
+  margin-inline: auto;
+  padding-block: var(--space-large);
+}
