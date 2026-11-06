@@ -15,7 +15,7 @@
   background: var(--color-surface);
 }
 
-.temporary-section h1 {
+.temporary-section h2 {
   font-size: clamp(2rem, 6vw, 3.5rem);
   line-height: 1.15;
 }
