@@ -33,3 +33,24 @@ button, input, select, textarea {
   outline: 3px solid var(--color-accent);
   outline-offset: 4px;
 }
+
+/* Typography */
+h1, h2, h3, h4 {
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+small {
+  font-size: var(--font-size-small);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}

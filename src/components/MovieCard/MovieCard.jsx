@@ -1,12 +1,13 @@
 import { useId } from 'react'
+import Button from '../Button/Button.jsx'
 
-function MovieCard({ movie }) {
+function MovieCard({ movie, isFavorite, onToggleFavorite }) {
   const titleId = useId()
   const showtimesId = useId()
   const { id, image, title, classification, rating, showtimes } = movie
 
   return (
-    <article className="movie-card" aria-labelledby={titleId}>
+    <article className={`movie-card${isFavorite ? ' movie-card--favorite' : ''}`} aria-labelledby={titleId}>
       <img
         className="movie-card-poster"
         src={image}
@@ -36,6 +37,16 @@ function MovieCard({ movie }) {
             </li>
           ))}
         </ul>
+        <Button
+          className="movie-card-favorite"
+          variant={isFavorite ? 'primary' : 'ghost'}
+          aria-pressed={isFavorite}
+          aria-label={isFavorite ? `Remove ${title} from favorites` : `Add ${title} to favorites`}
+          onClick={() => onToggleFavorite(id)}
+        >
+          <span aria-hidden="true">{isFavorite ? '★' : '☆'}</span>
+          {isFavorite ? 'Favorite' : 'Add to favorites'}
+        </Button>
       </div>
     </article>
   )

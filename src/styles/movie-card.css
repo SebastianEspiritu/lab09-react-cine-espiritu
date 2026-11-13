@@ -63,3 +63,27 @@
   background: var(--color-surface);
   font-variant-numeric: tabular-nums;
 }
+
+.movie-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.movie-card-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.movie-card-showtimes {
+  margin-bottom: var(--space-large);
+}
+
+.movie-card-favorite {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+.movie-card--favorite {
+  border-color: var(--color-accent);
+}

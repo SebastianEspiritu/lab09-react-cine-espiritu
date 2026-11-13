@@ -8,8 +8,7 @@
   flex: 1;
 }
 
-.section-label,
-.contact-link {
+.section-label {
   color: var(--color-accent);
 }
 

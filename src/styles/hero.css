@@ -51,11 +51,8 @@
   font-weight: 700;
 }
 
-.hero .contact-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  text-underline-offset: 0.25em;
+.hero .movie-search {
+  margin-bottom: var(--space-medium);
 }
 
 @media (max-width: 40rem) {

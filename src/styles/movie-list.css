@@ -9,11 +9,32 @@
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
   gap: var(--space-large);
   margin-top: var(--space-large);
 }
 
 .movie-grid .movie-card {
   max-width: none;
+}
+
+.empty-state {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-small);
+  margin-top: var(--space-large);
+  padding: clamp(2rem, 6vw, 4rem) var(--space-large);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-medium);
+  background: var(--color-surface);
+  text-align: center;
+}
+
+.empty-state h3 {
+  font-size: var(--font-size-large);
+}
+
+.empty-state-icon {
+  font-size: 2.5rem;
+  margin: 0;
 }

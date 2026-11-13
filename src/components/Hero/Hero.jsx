@@ -1,4 +1,6 @@
-function Hero({ movie }) {
+import Button from '../Button/Button.jsx'
+
+function Hero({ movie, children }) {
   const { image, title, synopsis, classification, rating } = movie
 
   return (
@@ -25,7 +27,8 @@ function Hero({ movie }) {
             <dd><span aria-hidden="true">★ </span>{rating.toFixed(1)} out of 10</dd>
           </div>
         </dl>
-        <a className="contact-link" href="#now-showing">Explore now showing</a>
+        {children}
+        <Button variant="secondary" href="#now-showing">Explore now showing</Button>
       </div>
     </section>
   )

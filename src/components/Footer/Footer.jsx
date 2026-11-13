@@ -1,3 +1,5 @@
+import Button from '../Button/Button.jsx'
+
 const currentYear = new Date().getFullYear()
 
 function Footer() {
@@ -13,7 +15,7 @@ function Footer() {
           </address>
         </div>
         <div className="footer-details">
-          <a href="#home">Back to top</a>
+          <Button variant="ghost" href="#home">Back to top</Button>
           <p className="muted-text"><small>&copy; {currentYear} Cinema Espiritu. All rights reserved.</small></p>
         </div>
       </div>

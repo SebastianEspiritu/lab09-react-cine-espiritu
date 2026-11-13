@@ -1,4 +1,4 @@
-function Header() {
+function Header({ favoritesCount }) {
   return (
     <header className="site-header" id="home">
       <a className="skip-link" href="#main-content">Skip to content</a>
@@ -15,6 +15,13 @@ function Header() {
             <li><a href="#home">Home</a></li>
             <li><a href="#now-showing">Now showing</a></li>
             <li><a href="#contact">Contact</a></li>
+            <li>
+              <span className="favorites-badge" aria-live="polite">
+                <span className="visually-hidden">Saved: </span>
+                <span aria-hidden="true">★</span>
+                {favoritesCount} {favoritesCount === 1 ? 'favorite' : 'favorites'}
+              </span>
+            </li>
           </ul>
         </nav>
       </div>
