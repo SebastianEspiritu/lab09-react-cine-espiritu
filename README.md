@@ -166,6 +166,8 @@ Al escribir "storm" la consola muestra cinco pulsaciones y un solo filtrado:
 [App] filtering listings by: "storm"
 ```
 
+![Consola con el retardo del buscador](docs/evidence/lab10/11-console-debounce.png)
+
 ### Estado vacío
 
 ![Estado vacío del buscador](docs/evidence/lab10/07-empty-state.png)
