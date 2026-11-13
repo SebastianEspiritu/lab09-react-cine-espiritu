@@ -17,7 +17,7 @@ Alumno: Sebastián Espíritu · Sección 4-C24-B
 | 9 | Buscador integrado en el banner con su llamada a la acción | `<Hero>{children}</Hero>`, Search y Explore now showing | Cumplido |
 | 10 | Favoritas en el almacenamiento del navegador | `localStorage` con lectura inicial y `useEffect` | Cumplido |
 | 11 | Registrar dónde vive cada dato y por qué; captura del estado vacío | Informe 3.10 y figura 6 | Cumplido |
-| 12 | Subir al repositorio y entregar en el campus | GitHub + Canvas | Pendiente de push y entrega |
+| 12 | Subir al repositorio y entregar en el campus | GitHub + Canvas | Push y entrega del Word |
 
 ## Rúbrica
 

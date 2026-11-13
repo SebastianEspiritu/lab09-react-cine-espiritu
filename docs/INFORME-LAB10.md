@@ -162,8 +162,9 @@ Cada pulsación reinicia el temporizador. El filtrado solo usa el texto cuando e
 
 Hay cinco pulsaciones y un solo filtrado.
 
-**Figura 4. Consola del navegador con las pulsaciones y el filtrado.**
-> Insertar aquí la captura de la consola de Chrome (F12 → Console) después de escribir "storm".
+![Figura 4. Consola del navegador: 5 pulsaciones y 1 solo filtrado](evidence/lab10/11-console-debounce.png)
+
+![Figura 4b. Página y consola al escribir "storm"](evidence/lab10/12-console-and-page.png)
 
 ### 3.7. Filtrado y estado vacío en MovieList
 
@@ -253,8 +254,13 @@ El texto de búsqueda no se guarda en el navegador porque es temporal.
 | P09 | Pulsar Search | Va a la sección de resultados | Correcto |
 | P10 | Vista a 390 px | Sin desplazamiento horizontal | Correcto |
 | P11 | Consola del navegador | Sin errores ni advertencias | Correcto |
+| P12 | `npm run build` y `npm run lint` | Sin errores | 25 módulos; 0 warnings y 0 errors |
 
 ![Figura 9. Página completa](evidence/lab10/08-full-page.png)
+
+![Figura 11. Estructura del proyecto en VS Code](evidence/lab10/14-vscode-tree.png)
+
+![Figura 12. npm run build y npm run lint sin errores](evidence/lab10/13-build-lint.png)
 
 ![Figura 10. Vista en celular](evidence/lab10/10-mobile.png)
 
