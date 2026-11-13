@@ -22,7 +22,7 @@ function Hero({ movie }) {
           </div>
           <div>
             <dt>Rating</dt>
-            <dd><span aria-hidden="true">★ </span>{rating} out of 10</dd>
+            <dd><span aria-hidden="true">★ </span>{rating.toFixed(1)} out of 10</dd>
           </div>
         </dl>
         <a className="contact-link" href="#now-showing">Explore now showing</a>

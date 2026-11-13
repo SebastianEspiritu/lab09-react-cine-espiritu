@@ -23,7 +23,7 @@ El comentario en este extracto solo abrevia la documentación; no se insertó en
 
 ## A. class en lugar de className
 
-- Archivo: `src/components/MovieList.jsx`.
+- Archivo: `src/components/MovieList/MovieList.jsx` (en la primera reproducción el componente aún estaba en `src/components/MovieList.jsx`; por eso el mensaje de Vite muestra esa ruta).
 - Línea durante la reproducción: **5** (archivo modificado temporalmente).
 
 Código incorrecto:
@@ -46,7 +46,7 @@ Resultado: archivo restaurado exactamente al original y renderizado posterior si
 
 ## B. Dos elementos JSX raíz adyacentes
 
-- Archivo: `src/components/MovieList.jsx`.
+- Archivo: `src/components/MovieList/MovieList.jsx` (en la primera reproducción el componente aún estaba en `src/components/MovieList.jsx`; por eso el mensaje de Vite muestra esa ruta).
 - Línea durante la reproducción: **14** (archivo modificado temporalmente).
 
 Código incorrecto:
@@ -80,7 +80,7 @@ Resultado: archivo restaurado exactamente al original y renderizado posterior si
 
 ## C. Omitir key en map()
 
-- Archivo: `src/components/MovieList.jsx`.
+- Archivo: `src/components/MovieList/MovieList.jsx` (en la primera reproducción el componente aún estaba en `src/components/MovieList.jsx`; por eso el mensaje de Vite muestra esa ruta).
 - Línea durante la reproducción: **10** (archivo modificado temporalmente).
 
 Código incorrecto:
@@ -103,8 +103,18 @@ Solución aplicada: Restaurar <MovieCard key={movie.id} movie={movie} />. No usa
 
 Resultado: archivo restaurado exactamente al original y renderizado posterior sin advertencias.
 
-## Verificación final del renderizado
+## Verificación en el navegador (Chrome)
 
-Ocho tarjetas, 24 horarios y datos de afiche, título, clasificación y valoración comprobados contra movies.js. Archivos de imágenes existentes; identificadores accesibles únicos y destinos de navegación conservados. Sin advertencias de React después de restaurar el código. No se añadieron dependencias. Esta prueba no sustituye una revisión visual en navegador.
+Los casos A y C se repitieron cargando la aplicación en Google Chrome y leyendo la consola del navegador; el caso B se repitió compilando. Mensajes obtenidos:
 
-Comprobaciones finales: `npm run build` correcto, `npm run lint` sin advertencias y `git diff --check` sin errores. `git diff --exit-code -- src package.json package-lock.json` confirmó que la aplicación y sus dependencias no tienen cambios respecto al estado inicial. Solo se agregaron estas evidencias y se actualizó README. Git mostró un aviso de conversión futura de LF a CRLF en MovieList.jsx; no se modificó su configuración.
+| Caso | Dónde aparece | Mensaje |
+| --- | --- | --- |
+| A. `class` | Consola del navegador (error de React) | Invalid DOM property `class`. Did you mean `className`? |
+| B. Dos raíces | Compilación (la página no llega a generarse) | Error de sintaxis JSX en `MovieList.jsx:14`: dos elementos adyacentes sin contenedor |
+| C. Sin `key` | Consola del navegador (error de React) | Each child in a list should have a unique "key" prop. Check the render method of `MovieList`. |
+
+Conclusión: A y C no impiden que la página se vea, pero React los marca en la consola; B detiene la compilación. Tras restaurar `className`, la raíz única y `key={movie.id}`, la consola queda sin errores.
+
+## Verificación final
+
+Con el código corregido se dibujan ocho tarjetas y 24 horarios que coinciden con `movies.js`, y la consola del navegador no muestra errores ni advertencias de React.

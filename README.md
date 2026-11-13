@@ -1,113 +1,131 @@
 # Laboratorio 09 — Cinema Espiritu
 
-Cartelera académica con React, JSX y Vite: una película destacada y ocho películas con afiches, clasificaciones, valoraciones y horarios. Los datos y afiches SVG son ficticios; no se implementan reservas ni servicios externos.
+Cartelera de cine hecha con React, JSX y Vite para el curso **Desarrollo de Aplicaciones Empresariales** (sección 4-C24-B). Muestra una película destacada y una cartelera de ocho películas con afiche, clasificación, valoración y horarios. Las películas, los afiches SVG y los datos de contacto son ficticios.
 
-## Requisitos e instalación
+**Autor:** Sebastián Espíritu
 
-Git, Node.js y npm. La guía solicita Node 20 o superior; además debe utilizarse una versión compatible con las dependencias del proyecto. Entorno comprobado: **Node v24.15.0 y npm 11.12.1**.
+![Cartelera completa](docs/evidence/screenshots/03-catalog-desktop.png)
 
-Desde la raíz del repositorio:
+## Requisitos
+
+- Node.js 20 o superior (probado con Node v24.15.0 y npm 11.12.1)
+- Git
+
+## Instalación y ejecución
 
 ```powershell
 npm install
-```
-
-Para una instalación reproducible con el archivo de bloqueo existente, se puede usar `npm ci` en lugar de `npm install`. No se reinstalaron dependencias durante la auditoría. `package.json` declara los paquetes y `package-lock.json` fija sus versiones. `.gitignore` excluye `node_modules/` y `dist/`.
-
-## Ejecución y compilación
-
-```powershell
 npm run dev
 ```
 
-Abrir la URL indicada por Vite, normalmente `http://localhost:5173/`. Si el puerto está ocupado, usar el que indique la terminal. Detener con `Ctrl+C`.
+Abrir la URL que muestra Vite (normalmente `http://localhost:5173/`). Detener con `Ctrl+C`.
 
-```powershell
-npm run build
-npm run preview
-```
+Otros comandos:
 
-`build` genera `dist/`; `preview` permite servir esa compilación localmente. Abrir la URL indicada por el segundo comando. La auditoría ejecutó build y el servidor de desarrollo, no preview.
+| Comando | Qué hace |
+| --- | --- |
+| `npm run build` | Genera la versión de producción en `dist/` |
+| `npm run preview` | Sirve localmente la carpeta `dist/` |
+| `npm run lint` | Revisa el código con Oxlint |
 
-## Componentes y datos
+## Dependencias
 
-| Archivo | Responsabilidad | Props |
-| --- | --- | --- |
-| `src/App.jsx` | Importar datos, seleccionar `movies[0]` y componer la página | Ninguna |
-| `src/components/Header/Header.jsx` | Identidad visual y navegación | Ninguna |
-| `src/components/Hero/Hero.jsx` | Banner con afiche, título, sinopsis, clasificación y valoración | `movie` |
-| `src/components/MovieList/MovieList.jsx` | Título y cuadrícula de tarjetas | `movies` |
-| `src/components/MovieCard/MovieCard.jsx` | Afiche, título, clasificación, valoración y horarios | `movie` |
-| `src/components/Footer/Footer.jsx` | Contacto y ubicación ficticios, derechos de autor | Ninguna |
+Declaradas en `package.json` y fijadas en `package-lock.json`:
 
-App pasa `<Hero movie={featuredMovie} />` y `<MovieList movies={movies} />`. MovieList usa `movies.map()` y `<MovieCard key={movie.id} movie={movie} />`. Los hijos no importan `movies.js` ni conocen el origen de los datos. Los horarios se recorren con claves `${id}-${showtime}`; son únicos por película. `key` es una indicación para React y no una prop de MovieCard.
+| Paquete | Uso |
+| --- | --- |
+| `react`, `react-dom` | Biblioteca de interfaz y renderizado en el navegador |
+| `vite`, `@vitejs/plugin-react` | Servidor de desarrollo y compilación con soporte JSX |
+| `oxlint` | Linter |
+| `@types/react`, `@types/react-dom` | Tipos para el autocompletado del editor |
 
-## Estructura
+`.gitignore` excluye `node_modules/` y `dist/`.
+
+## Estructura del proyecto
 
 ```text
-public/images/movies/      Ocho afiches SVG locales
+public/
+  favicon.svg
+  images/movies/          Ocho afiches SVG
 src/
   components/
-    Header/Header.jsx
-    Footer/Footer.jsx
-    Hero/Hero.jsx
-    MovieCard/MovieCard.jsx
-    MovieList/MovieList.jsx
-  data/movies.js          Fuente única de las ocho películas
-  styles/
-    index.css            Entrada de estilos
-    variables.css        Colores, tipografía y espaciado
-    base.css             Reglas globales y foco visible
-    layout.css           Contenedor y distribución
-    header.css           Encabezado
-    footer.css           Pie
-    hero.css             Banner adaptable
-    movie-card.css       Tarjeta y horarios
-    movie-list.css       Cuadrícula adaptable
-  App.jsx
-  main.jsx
+    Header/Header.jsx       Marca del cine y navegación
+    Hero/Hero.jsx           Banner de la película destacada
+    MovieList/MovieList.jsx Cartelera: recorre las películas con map
+    MovieCard/MovieCard.jsx Tarjeta de una película
+    Footer/Footer.jsx       Contacto e información
+  data/movies.js          Datos de las ocho películas
+  styles/                 Arquitectura CSS (ver abajo)
+  App.jsx                 Composición de la página
+  main.jsx                Punto de entrada
 docs/
-  lab09-checklist.md      Auditoría de guía y rúbrica
-  INFORME-LAB09.md        Informe y ubicaciones de capturas pendientes
-  evidence/jsx-errors.md Mensajes reales de los tres errores
+  INFORME-LAB09.md        Informe del laboratorio con capturas
+  lab09-checklist.md      Cumplimiento de los 12 pasos y la rúbrica
+  evidence/
+    jsx-errors.md         Los tres errores JSX provocados y su solución
+    screenshots/          Capturas de la aplicación
 ```
 
-Cada película contiene `id`, `title`, `image`, `synopsis`, `classification`, `rating` y `showtimes`. Valoraciones: 0–10. Horarios: formato de 24 horas. Imágenes: rutas locales con `import.meta.env.BASE_URL`. El correo `.example` y la dirección del Footer son ficticios.
+## Componentes y props
 
-La navegación apunta a `#home`, `#now-showing` y `#contact`; existe un salto a `#main-content`. Se usan HTML semántico, texto alternativo, títulos jerárquicos, `useId` y foco visible. La cuadrícula ajusta sus columnas al ancho disponible; su apariencia y uso con teclado deben confirmarse en navegador.
+![Recorte de la interfaz en componentes](docs/evidence/screenshots/08-component-breakdown.png)
 
-## Pruebas y resultados
+| Componente | Responsabilidad | Props que recibe |
+| --- | --- | --- |
+| `App` | Importa los datos, elige la película destacada y compone la página | — |
+| `Header` | Nombre del cine y navegación | — |
+| `Hero` | Banner con afiche, título, sinopsis, clasificación y valoración | `movie` |
+| `MovieList` | Título de la sección y cuadrícula de tarjetas | `movies` |
+| `MovieCard` | Afiche, título, clasificación, valoración y horarios | `movie` |
+| `Footer` | Datos de contacto y derechos | — |
 
-```powershell
-npm run build
-npm run lint
-git diff --check
+Flujo de datos: `App` es el único componente que importa `movies.js`. Pasa `movies[0]` a `Hero` y el arreglo completo a `MovieList`, que lo recorre con `map` y crea un `MovieCard` por película:
+
+```jsx
+{movies.map((movie) => (
+  <MovieCard key={movie.id} movie={movie} />
+))}
 ```
 
-Auditoría del **6 de noviembre de 2026**, en `main`, con Git limpio al comenzar:
+Los componentes hijos no saben de dónde vienen los datos; solo usan lo que reciben por props. La `key` usa el `id` de cada película (nunca el índice), y los horarios usan `${id}-${showtime}`.
 
-| Prueba ejecutada | Resultado |
+## Datos
+
+Cada película de `src/data/movies.js` tiene `id`, `title`, `image`, `synopsis`, `classification`, `rating` (escala 0–10, se muestra con un decimal) y `showtimes` (formato 24 horas). Las imágenes usan `import.meta.env.BASE_URL` para que funcionen también tras compilar.
+
+## Arquitectura CSS
+
+`src/styles/index.css` es la única hoja que se importa (en `main.jsx`) y reúne el resto en orden:
+
+| Archivo | Contenido |
 | --- | --- |
-| Compilación Vite 8.3.6 | Correcta; 22 módulos transformados |
-| Lint con Oxlint | Sin advertencias ni errores |
-| `git diff --check` | Sin errores |
-| Servidor de desarrollo Vite | HTTP 200 en la raíz |
-| App renderizada con React DOM Server mediante Vite | Ocho tarjetas y 24 horarios coincidentes con los datos, sin advertencias de React |
-| Ocho afiches solicitados al servidor | HTTP 200 y tipo `image/svg+xml` |
-| Integridad y estructura | IDs únicos, campos completos, horarios válidos y destinos internos presentes |
+| `variables.css` | Colores, tipografía, espaciados y radios |
+| `base.css` | Reglas globales y foco visible |
+| `layout.css` | Contenedor y distribución general |
+| `header.css`, `hero.css`, `movie-list.css`, `movie-card.css`, `footer.css` | Estilos de cada componente |
 
-El renderizado de servidor no comprueba disposición visual, hidratación, comportamiento del navegador ni accesibilidad completa. Las pruebas de renderizado fueron ejecuciones puntuales, sin nuevos paquetes ni un script permanente. No hay un comando `npm test` configurado.
+La cuadrícula usa `repeat(auto-fit, minmax(...))`, así que pasa de cuatro columnas en escritorio a una en el celular.
 
-En la etapa 7 se reprodujeron por separado `class` en lugar de `className`, dos raíces JSX y ausencia de `key`, restaurando el código tras cada caso. Los [mensajes reales y soluciones](docs/evidence/jsx-errors.md) se capturaron en terminal: A/C con React en desarrollo y B con el compilador Vite. No son capturas de navegador. En la etapa 8 se revisó el registro, sin volver a introducir errores.
+## Errores típicos de JSX
 
-Vite requirió permisos ampliados por `spawn EPERM` en el entorno restringido; no se cambió la configuración de la aplicación. No se ejecutó una auditoría de vulnerabilidades actual en esta etapa.
+Se provocaron y corrigieron tres errores (detalle en [docs/evidence/jsx-errors.md](docs/evidence/jsx-errors.md)):
 
-## Documentación y pendientes
+| Error | Mensaje | Solución |
+| --- | --- | --- |
+| `class` en vez de `className` | Invalid DOM property `class`. Did you mean `className`? | Usar `className` |
+| Dos nodos raíz | Adjacent JSX elements must be wrapped in an enclosing tag. | Un solo contenedor o un fragmento `<>...</>` |
+| `map` sin `key` | Each child in a list should have a unique "key" prop. | `key={movie.id}` |
 
-- [Checklist de los 12 pasos y la rúbrica](docs/lab09-checklist.md).
-- [Informe académico y ubicaciones exactas de capturas](docs/INFORME-LAB09.md).
-- [Errores JSX y soluciones](docs/evidence/jsx-errors.md).
+## Pruebas
 
-Quedan pendientes las capturas reales y la revisión visual en escritorio y móvil. En «Normas empleadas», la guía establece: «Código JavaScript según el estándar de ReactJS: componentes en PascalCase, hooks con el prefijo `use` y una carpeta por componente». Se aplica como norma: cada componente tiene ahora una carpeta individual dentro de `src/components/`, con los imports de App y MovieList actualizados. Los estilos siguen centralizados por responsabilidad en `src/styles/`. La fuente menciona una arquitectura CSS sin detallar sus archivos; cualquier material complementario requiere cotejo cuando esté disponible.
+| Prueba | Resultado |
+| --- | --- |
+| `npm run build` | Compila sin errores |
+| `npm run lint` | Sin advertencias ni errores |
+| Página en el navegador | Header, Hero, 8 tarjetas, 24 horarios y Footer; consola sin errores |
+| Datos | Cada tarjeta coincide con su registro de `movies.js` |
+| Afiches | Los 8 SVG cargan correctamente |
+| Celular (390 px) | Una columna, sin desplazamiento horizontal |
+| Teclado | `Tab` muestra el enlace "Skip to content" y el foco es visible |
 
-Completar integrantes, aportes y datos de entrega en el informe. Existe un remoto `origin`, pero no se consultó GitHub ni se verificó su contenido. La publicación y la entrega Canvas no se dan por realizadas. La etapa 8 modificó solamente documentación; la revisión posterior resolvió la organización en carpetas mediante movimientos e imports, sin cambiar la interfaz ni los datos. No se hizo commit ni push. La calificación corresponde al docente y no se garantiza 20/20.
+Más detalle en el [informe](docs/INFORME-LAB09.md).
