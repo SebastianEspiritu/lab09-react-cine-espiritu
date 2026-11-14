@@ -13,12 +13,34 @@ Cartelera de cine hecha con React, JSX y Vite para el curso **Desarrollo de Apli
 
 ## Instalación y ejecución
 
-```powershell
-npm install
-npm run dev
-```
+1. Clonar el repositorio y entrar a la carpeta:
 
-Abrir la URL que muestra Vite (normalmente `http://localhost:5173/`). Detener con `Ctrl+C`.
+   ```powershell
+   git clone https://github.com/SebastianEspiritu/lab09-react-cine-espiritu.git
+   cd lab09-react-cine-espiritu
+   ```
+
+2. Elegir la rama del laboratorio que se quiere ver:
+
+   | Rama | Contenido |
+   | --- | --- |
+   | `lab11` | Lab 11: estado elevado, hooks propios, adaptador, avisos y estrenos con carga y error |
+   | `main` | Labs 09 y 10: cartelera, botón reutilizable, favoritas y buscador |
+
+   ```powershell
+   git checkout lab11
+   ```
+
+3. Instalar las dependencias y levantar la app:
+
+   ```powershell
+   npm install
+   npm run dev
+   ```
+
+4. Abrir la URL que muestra Vite (normalmente `http://localhost:5173/`). Detener con `Ctrl+C`.
+
+Para ver el **estado de error** de los estrenos (Lab 11): abrir `http://localhost:5173/?fail=1`, o marcar **Simulate network error** y pulsar **Reload premieres**.
 
 Otros comandos:
 
