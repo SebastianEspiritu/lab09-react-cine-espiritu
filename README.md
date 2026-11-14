@@ -1,10 +1,10 @@
-# Cinema Espiritu — Laboratorios 09 y 10
+# Cinema Espiritu — Laboratorios 09, 10 y 11
 
-Cartelera de cine hecha con React, JSX y Vite para el curso **Desarrollo de Aplicaciones Empresariales** (sección 4-C24-B). El proyecto es acumulativo: el **Lab 09** armó la cartelera con componentes y props; el **Lab 10** le agrega un botón reutilizable, favoritas que se guardan en el navegador y un buscador con retardo. Las películas, los afiches SVG y los datos de contacto son ficticios.
+Cartelera de cine hecha con React, JSX y Vite para el curso **Desarrollo de Aplicaciones Empresariales** (sección 4-C24-B). El proyecto es acumulativo: el **Lab 09** armó la cartelera con componentes y props; el **Lab 10** le agrega un botón reutilizable, favoritas que se guardan en el navegador y un buscador con retardo; el **Lab 11** (rama `lab11`) añade comunicación entre componentes hermanos, hooks propios, un adaptador de datos, avisos emergentes y una sección de estrenos con estados de carga y de error. Las películas, los afiches SVG y los datos de contacto son ficticios.
 
 **Autor:** Sebastián Espíritu
 
-![Cartelera con favoritas y buscador](docs/evidence/lab10/08-full-page.png)
+![Página completa con estrenos, buscador y cartelera](docs/evidence/lab11/02-full-page.png)
 
 ## Requisitos
 
@@ -50,40 +50,62 @@ public/
 src/
   components/
     Button/Button.jsx           Botón reutilizable con variantes (Lab 10)
+    ErrorMessage/               Mensaje de error con botón para reintentar (Lab 11)
+    LoadingSkeleton/            Esqueleto de carga (Lab 11)
+    PremieresCarousel/          Carrusel de estrenos (Lab 11)
+    PremieresSection/           Sección de estrenos con sus tres estados (Lab 11)
+    Toast/                      Aviso emergente (Lab 11)
     Header/Header.jsx           Marca, navegación y contador de favoritas
     Hero/Hero.jsx               Banner destacado; recibe el buscador por children
     MovieSearch/MovieSearch.jsx Buscador controlado (Lab 10)
     MovieList/MovieList.jsx     Filtra y dibuja la cartelera; estado vacío
     MovieCard/MovieCard.jsx     Tarjeta con botón de favorita
     Footer/Footer.jsx           Contacto e información
-  hooks/useDebounce.js    Retardo para el buscador (Lab 10)
-  data/movies.js          Datos de las ocho películas
+  hooks/
+    useDebounce.js        Retardo (buscador y tamaño de ventana)
+    useWindowSize.js      Tamaño de la ventana (Lab 11)
+    usePremieres.js       Petición de estrenos: cargando, con datos o error (Lab 11)
+    useToast.js           Aviso que se oculta solo (Lab 11)
+  lib/
+    adaptMovie.js         Patrón adaptador: datos crudos → modelo de la app (Lab 11)
+    api.js                Petición simulada con retardo y modo de fallo (Lab 11)
+  data/
+    movies.js             Cartelera en formato crudo de API
+    premieres.js          Estrenos en formato crudo de API (Lab 11)
   styles/                 Arquitectura CSS (ver abajo)
   App.jsx                 Composición de la página
   main.jsx                Punto de entrada
 docs/
   INFORME-LAB09.md        Informe del Lab 09
   INFORME-LAB10.md        Informe del Lab 10
+  INFORME-LAB11.md        Informe del Lab 11
   lab09-checklist.md      Cumplimiento del Lab 09
   lab10-checklist.md      Cumplimiento del Lab 10
+  lab11-checklist.md      Cumplimiento del Lab 11
   evidence/
     jsx-errors.md         Errores JSX del Lab 09
     screenshots/          Capturas del Lab 09
     lab10/                Capturas del Lab 10
+    lab11/                Capturas del Lab 11
 ```
 
 ## Componentes y props
 
 ![Recorte de la interfaz en componentes](docs/evidence/screenshots/08-component-breakdown.png)
 
-| Componente | Responsabilidad | Props que recibe |
+| Componente | Responsabilidad | Props o datos |
 | --- | --- | --- |
-| `App` | Importa los datos, guarda el estado (favoritas y búsqueda) y compone la página | — |
+| `App` | Adapta los datos, guarda lo compartido (favoritas, búsqueda, aviso) y compone la página | — |
 | `Header` | Nombre del cine, navegación y contador de favoritas | `favoritesCount` |
-| `Hero` | Banner con afiche, título, sinopsis, clasificación, valoración y el buscador | `movie`, `children` |
-| `MovieSearch` | Campo de búsqueda controlado y botón Search | `value`, `onChange`, `onSubmit` |
-| `MovieList` | Filtra la cartelera, dibuja las tarjetas o el estado vacío | `movies`, `searchTerm`, `favoriteIds`, `onToggleFavorite`, `onClearSearch` |
-| `MovieCard` | Afiche, título, clasificación, valoración, horarios y botón de favorita | `movie`, `isFavorite`, `onToggleFavorite` |
+| `Hero` | Banner de la película destacada con el buscador | `movie`, `children` |
+| `MovieSearch` | Buscador controlado con botones Search y Clear | `value`, `onChange`, `onSubmit`, `onClear` |
+| `PremieresSection` | Estrenos con sus estados de carga, error y datos | usa `usePremieres` |
+| `LoadingSkeleton` | Tarjetas grises mientras carga | `count`, `label` |
+| `ErrorMessage` | Explica el error y permite reintentar | `title`, `error`, `onRetry` |
+| `PremieresCarousel` | Carrusel con anterior/siguiente | `premieres`; usa `useWindowSize` |
+| `MovieList` | Filtra la cartelera y la dibuja en columnas según el ancho | `movies`, `searchTerm`, `favoriteIds`, `onToggleFavorite`, `onClearSearch`; usa `useWindowSize` |
+| `MovieCard` | Tarjeta con botón de favorita | `movie`, `isFavorite`, `onToggleFavorite` |
+| `Toast` | Aviso emergente | `toast`, `onClose` |
 | `Button` | Botón o enlace con variante | `children`, `variant`, `href` y cualquier atributo |
 | `Footer` | Datos de contacto y derechos | — |
 
@@ -104,7 +126,7 @@ Los componentes hijos no saben de dónde vienen los datos; solo usan lo que reci
 
 ## Datos
 
-Cada película de `src/data/movies.js` tiene `id`, `title`, `image`, `synopsis`, `classification`, `rating` (escala 0–10, se muestra con un decimal) y `showtimes` (formato 24 horas). Las imágenes usan `import.meta.env.BASE_URL` para que funcionen también tras compilar.
+`src/data/movies.js` y `src/data/premieres.js` guardan los registros como los enviaría una API: `movie_id`, `name`, `poster_file`, `overview`, `age_rating`, `score` (0–100) y `show_times` (texto con horas en formato 24 h); los estrenos añaden `release_date`. `adaptMovie()` los convierte al modelo que usan los componentes: `id`, `title`, `image`, `synopsis`, `classification`, `rating` (0–10, o `null` si no hay), `showtimes` (arreglo ordenado) y `releaseDate`.
 
 ## Arquitectura CSS
 
@@ -114,13 +136,66 @@ Cada película de `src/data/movies.js` tiene `id`, `title`, `image`, `synopsis`,
 | --- | --- |
 | `variables.css` | Colores, tipografía, espaciados, alto de controles y transiciones |
 | `base.css` | Reglas globales, tipografía y foco visible |
-| `utilities.css` | Clases de utilidad (`visually-hidden`) |
+| `utilities.css` | Clases de utilidad (`visually-hidden`, `stack`, `cluster`, `text-center`) |
 | `forms.css` | Etiquetas, campos de texto y buscador |
 | `layout.css` | Contenedor y distribución general |
+| `typography.css` | Escala tipográfica: etiquetas de sección, títulos, texto pequeño (Lab 11) |
 | `button.css` | Componente Button y sus tres variantes |
+| `premieres.css` | Estrenos: esqueleto de carga, mensaje de error y carrusel (Lab 11) |
+| `toast.css` | Aviso emergente (Lab 11) |
 | `header.css`, `hero.css`, `movie-list.css`, `movie-card.css`, `footer.css` | Estilos de cada componente |
 
 La cuadrícula usa `repeat(auto-fit, minmax(...))`, así que pasa de cuatro columnas en escritorio a una en el celular.
+
+## Lab 11: comunicación entre componentes y hooks propios
+
+El trabajo de este laboratorio está en la rama **`lab11`**.
+
+![Árbol de componentes y dónde vive cada dato](docs/evidence/lab11/00-component-tree.png)
+
+### Estado elevado al ancestro común
+
+| Dato | Dónde vive | Quién lo usa | Por qué ahí |
+| --- | --- | --- | --- |
+| Favoritas (`favoriteIds`) | `App` | `Header` (contador) y `MovieList` → `MovieCard` | `Header` y `MovieList` son hermanos; su ancestro común más cercano es `App`. |
+| Texto del buscador (`searchText`) | `App` | `MovieSearch` (dentro de `Hero`) y `MovieList` | `Hero` y `MovieList` son hermanos. |
+| Aviso (`toast`) | `App` (`useToast`) | `Toast` | Lo dispara el cambio de favoritas, que ocurre en `App`. |
+| Estrenos (`status`, `premieres`, `error`) | `PremieresSection` (`usePremieres`) | Solo esa sección | Nadie más los usa: no se suben a `App`. |
+| Simular error | `PremieresSection` | Solo esa sección | Igual que arriba. |
+| Posición del carrusel (`start`) | `PremieresCarousel` | Solo el carrusel | Estado local. |
+
+**Por qué el contador de favoritas no puede vivir en `Header`.** Las favoritas cambian cuando se pulsa el botón de una `MovieCard`, que está dentro de `MovieList`. `Header` y `MovieList` son hermanos, y en React los datos solo bajan de padre a hijo: un hermano no puede leer ni cambiar el estado de otro. Si el contador viviera en `Header`, las tarjetas no tendrían forma de actualizarlo. Por eso las favoritas viven en `App`, el ancestro común más cercano. `App` le pasa a `Header` solo el número (`favoriteIds.length`), no la lista, porque la cabecera no necesita más.
+
+### Hooks propios: qué lógica se extrajo y quién la comparte
+
+| Hook | Lógica que encapsula | Dónde se usa |
+| --- | --- | --- |
+| `useDebounce` | Esperar a que un valor deje de cambiar | `App` (buscador) y dentro de `useWindowSize` → llega a `MovieList` y `PremieresCarousel` |
+| `useWindowSize` | Leer el ancho de la ventana y escuchar `resize` (con limpieza) | `MovieList` (tarjetas por fila) y `PremieresCarousel` (tarjetas por vista) |
+| `usePremieres` | Petición con tres estados, `reload()` e ignorar respuestas viejas | `PremieresSection` |
+| `useToast` | Mostrar un aviso que se oculta solo tras 3 s | `App` |
+
+Sin estos hooks, la lógica de escuchar el tamaño de la ventana y la del temporizador se repetiría en cada componente que la usa.
+
+### Patrón adaptador
+
+Los datos llegan en formato de API (`movie_id`, `name`, `poster_file`, `score` de 0 a 100, `show_times` como texto). `adaptMovie()` los convierte al modelo de la app (`id`, `title`, `image`, `rating` de 0 a 10, `showtimes` ordenados) y pone valores por defecto si falta algo. La cartelera y los estrenos pasan por el mismo adaptador, así que los componentes nunca leen los nombres crudos.
+
+### Estados de carga y de error
+
+`usePremieres` simula la petición con `fetchPremieres()` (1,5 s de retardo). Mientras carga se muestra el esqueleto; con datos, el carrusel; si falla, un mensaje que explica el error y un botón **Try again**. Para ver el error: marcar **Simulate network error** y pulsar **Reload premieres**, o abrir `http://localhost:5173/?fail=1`.
+
+| Cargando | Con datos | Error |
+| --- | --- | --- |
+| ![Cargando](docs/evidence/lab11/03-premieres-loading.png) | ![Carrusel](docs/evidence/lab11/04-premieres-carousel.png) | ![Error](docs/evidence/lab11/06-premieres-error.png) |
+
+### Aviso emergente y botón Clear
+
+`MovieCard` solo llama a `onToggleFavorite(id)`; no sabe que existe un aviso. `App` cambia las favoritas y llama a `showToast()`.
+
+El botón **Clear** del banner llama a `onClear()`. `App` vacía `searchText` y el filtro se aplica al instante, sin esperar el retardo, así que el campo y la cartelera quedan sincronizados.
+
+Detalle en el [informe del Lab 11](docs/INFORME-LAB11.md).
 
 ## Lab 10: componentes reutilizables, estado y eventos
 
@@ -194,6 +269,10 @@ Se provocaron y corrigieron tres errores (detalle en [docs/evidence/jsx-errors.m
 | Favoritas | El botón cambia a ★ Favorite, el contador del Header sube y baja, y siguen tras recargar |
 | Buscador | "storm" → 1 película; "pg-13" → 4; "zzz" → estado vacío; Clear search vuelve a 8 |
 | Retardo | 5 pulsaciones → 1 filtrado |
+| Estrenos | Esqueleto mientras carga, carrusel con 4 estrenos, error con Try again, `?fail=1` |
+| Columnas | 4 por fila a 1366 px, 3 a 1024 px, 2 a 768 px, 1 a 390 px |
+| Aviso | Aparece al marcar y desmarcar, y se oculta a los 3 s |
+| Clear | Vacía el campo y muestra las 8 películas al instante |
 | Datos | Cada tarjeta coincide con su registro de `movies.js` |
 | Afiches | Los 8 SVG cargan correctamente |
 | Celular (390 px) | Una columna, sin desplazamiento horizontal |

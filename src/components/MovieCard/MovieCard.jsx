@@ -26,7 +26,7 @@ function MovieCard({ movie, isFavorite, onToggleFavorite }) {
           </div>
           <div>
             <dt>Rating</dt>
-            <dd><span aria-hidden="true">★ </span>{rating.toFixed(1)} out of 10</dd>
+            <dd>{rating === null ? 'Not rated yet' : <><span aria-hidden="true">★ </span>{rating.toFixed(1)} out of 10</>}</dd>
           </div>
         </dl>
         <h4 id={showtimesId}>Available showtimes</h4>

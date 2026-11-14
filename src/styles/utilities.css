@@ -9,3 +9,24 @@
   white-space: nowrap;
   border: 0;
 }
+
+.stack > * + * {
+  margin-top: var(--space-medium);
+}
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-small) var(--space-medium);
+}
+
+.text-center {
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-block {
+    animation: none !important;
+  }
+}

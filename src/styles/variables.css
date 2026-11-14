@@ -22,3 +22,16 @@
   --control-height: 2.75rem;
   --transition-fast: 150ms ease;
 }
+
+/* Lab 11 */
+:root {
+  --color-success: #7ee2a8;
+  --color-skeleton: #262b38;
+  --color-skeleton-shine: #323849;
+  --font-size-xs: 0.75rem;
+  --font-size-xl: clamp(1.5rem, 3vw, 2rem);
+  --font-size-display: clamp(2rem, 5vw, 3rem);
+  --letter-spacing-wide: 0.12em;
+  --shadow-raised: 0 12px 32px rgb(0 0 0 / 0.45);
+  --carousel-gap: 1.5rem;
+}

@@ -13,6 +13,7 @@ function Header({ favoritesCount }) {
         <nav aria-label="Main navigation">
           <ul className="navigation-links">
             <li><a href="#home">Home</a></li>
+            <li><a href="#coming-soon">Coming soon</a></li>
             <li><a href="#now-showing">Now showing</a></li>
             <li><a href="#contact">Contact</a></li>
             <li>

@@ -1,7 +1,7 @@
 import { useId } from 'react'
 import Button from '../Button/Button.jsx'
 
-function MovieSearch({ value, onChange, onSubmit }) {
+function MovieSearch({ value, onChange, onSubmit, onClear }) {
   const inputId = useId()
 
   function handleChange(event) {
@@ -28,6 +28,11 @@ function MovieSearch({ value, onChange, onSubmit }) {
           onChange={handleChange}
         />
         <Button type="submit">Search</Button>
+        {value !== '' && (
+          <Button variant="ghost" onClick={onClear} aria-label="Clear search">
+            Clear
+          </Button>
+        )}
       </div>
     </form>
   )

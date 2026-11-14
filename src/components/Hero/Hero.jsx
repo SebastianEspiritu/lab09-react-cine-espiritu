@@ -24,7 +24,7 @@ function Hero({ movie, children }) {
           </div>
           <div>
             <dt>Rating</dt>
-            <dd><span aria-hidden="true">★ </span>{rating.toFixed(1)} out of 10</dd>
+            <dd>{rating === null ? 'Not rated yet' : <><span aria-hidden="true">★ </span>{rating.toFixed(1)} out of 10</>}</dd>
           </div>
         </dl>
         {children}

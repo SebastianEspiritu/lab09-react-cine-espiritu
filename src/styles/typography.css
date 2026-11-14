@@ -1,0 +1,26 @@
+/* Type scale used across sections */
+.section-label {
+  font-size: var(--font-size-small);
+  font-weight: 700;
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.premieres h2,
+.movie-list h2 {
+  font-size: var(--font-size-display);
+  line-height: 1.15;
+}
+
+.lead-text {
+  font-size: var(--font-size-large);
+  line-height: 1.5;
+}
+
+.text-small {
+  font-size: var(--font-size-small);
+}
+
+.text-xs {
+  font-size: var(--font-size-xs);
+}

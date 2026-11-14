@@ -1,5 +1,6 @@
 import Button from '../Button/Button.jsx'
 import MovieCard from '../MovieCard/MovieCard.jsx'
+import useWindowSize from '../../hooks/useWindowSize.js'
 
 function normalize(text) {
   return text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim()
@@ -11,7 +12,16 @@ function matchesSearch(movie, searchTerm) {
   return [movie.title, movie.synopsis, movie.classification].some((field) => normalize(field).includes(query))
 }
 
+function cardsPerRow(width) {
+  if (width < 640) return 1
+  if (width < 900) return 2
+  if (width < 1200) return 3
+  return 4
+}
+
 function MovieList({ movies, searchTerm, favoriteIds, onToggleFavorite, onClearSearch }) {
+  const { width } = useWindowSize()
+  const columns = cardsPerRow(width)
   const visibleMovies = movies.filter((movie) => matchesSearch(movie, searchTerm))
   const isSearching = searchTerm.trim() !== ''
 
@@ -21,11 +31,11 @@ function MovieList({ movies, searchTerm, favoriteIds, onToggleFavorite, onClearS
       <p className="muted-text" aria-live="polite">
         {isSearching
           ? `${visibleMovies.length} of ${movies.length} movies match “${searchTerm.trim()}”.`
-          : 'Explore our movie listings. Showtimes use the 24-hour format.'}
+          : `Explore our movie listings. Showtimes use the 24-hour format. Showing ${columns} per row.`}
       </p>
 
       {visibleMovies.length > 0 ? (
-        <div className="movie-grid">
+        <div className="movie-grid" style={{ '--columns': columns }} data-columns={columns}>
           {visibleMovies.map((movie) => (
             <MovieCard
               key={movie.id}
