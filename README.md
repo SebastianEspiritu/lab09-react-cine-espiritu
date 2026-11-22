@@ -1,6 +1,6 @@
-# Cinema Espiritu — Laboratorios 09, 10 y 11
+# Cinema Espiritu — Laboratorios 09 a 12
 
-Cartelera de cine hecha con React, JSX y Vite para el curso **Desarrollo de Aplicaciones Empresariales** (sección 4-C24-B). El proyecto es acumulativo: el **Lab 09** armó la cartelera con componentes y props; el **Lab 10** le agrega un botón reutilizable, favoritas que se guardan en el navegador y un buscador con retardo; el **Lab 11** (rama `lab11`) añade comunicación entre componentes hermanos, hooks propios, un adaptador de datos, avisos emergentes y una sección de estrenos con estados de carga y de error. Las películas, los afiches SVG y los datos de contacto son ficticios.
+Cartelera de cine hecha con React, JSX y Vite para el curso **Desarrollo de Aplicaciones Empresariales** (sección 4-C24-B). El proyecto es acumulativo: el **Lab 09** armó la cartelera con componentes y props; el **Lab 10** le agrega un botón reutilizable, favoritas que se guardan en el navegador y un buscador con retardo; el **Lab 11** (rama `lab11`) añade comunicación entre componentes hermanos, hooks propios, un adaptador de datos, avisos emergentes y una sección de estrenos con estados de carga y de error; el **Lab 12** (rama `lab12`) conecta la app con una API de Django (carpeta `backend/`) mediante Axios, con CORS, listado, alta y borrado. Las películas, los afiches SVG y los datos de contacto son ficticios.
 
 **Autor:** Sebastián Espíritu
 
@@ -9,6 +9,7 @@ Cartelera de cine hecha con React, JSX y Vite para el curso **Desarrollo de Apli
 ## Requisitos
 
 - Node.js 20 o superior (probado con Node v24.15.0 y npm 11.12.1)
+- Python 3.12 o superior (solo para el backend del Lab 12)
 - Git
 
 ## Instalación y ejecución
@@ -24,6 +25,7 @@ Cartelera de cine hecha con React, JSX y Vite para el curso **Desarrollo de Apli
 
    | Rama | Contenido |
    | --- | --- |
+   | `lab12` | Lab 12: API de Django en `backend/` + React consumiéndola con Axios (ver [cómo levantar los dos lados](#lab-12-servicios-web-django--react-con-axios)) |
    | `lab11` | Lab 11: estado elevado, hooks propios, adaptador, avisos y estrenos con carga y error |
    | `main` | Labs 09 y 10: cartelera, botón reutilizable, favoritas y buscador |
 
@@ -57,21 +59,32 @@ Declaradas en `package.json` y fijadas en `package-lock.json`:
 | Paquete | Uso |
 | --- | --- |
 | `react`, `react-dom` | Biblioteca de interfaz y renderizado en el navegador |
+| `axios` | Peticiones HTTP a la API de Django (Lab 12) |
+| `react-router-dom` | Rutas de las páginas (Lab 12) |
 | `vite`, `@vitejs/plugin-react` | Servidor de desarrollo y compilación con soporte JSX |
 | `oxlint` | Linter |
 | `@types/react`, `@types/react-dom` | Tipos para el autocompletado del editor |
 
-`.gitignore` excluye `node_modules/` y `dist/`.
+`.gitignore` excluye `node_modules/`, `dist/`, los archivos `.env`, el entorno virtual y la base de datos SQLite del backend.
+
+El backend usa `Django`, `djangorestframework`, `django-cors-headers` y `python-dotenv` (`backend/requirements.txt`).
 
 ## Estructura del proyecto
 
 ```text
+backend/                  API de Django del Lab 12
+  config/                 settings.py (lee .env), urls.py
+  movies/                 Modelo Movie, serializador, vistas, rutas, fixture y pruebas
+  requirements.txt
+  .env.example            Variables de entorno (copiar a .env)
 public/
   favicon.svg
   images/movies/          Ocho afiches SVG
 src/
   components/
-    Button/Button.jsx           Botón reutilizable con variantes (Lab 10)
+    Button/Button.jsx           Botón reutilizable con variantes; `to` para rutas (Lab 10/12)
+    FormField/                  Etiqueta + campo + mensaje de error de la API (Lab 12)
+    TableSkeleton/              Esqueleto de carga de la tabla (Lab 12)
     ErrorMessage/               Mensaje de error con botón para reintentar (Lab 11)
     LoadingSkeleton/            Esqueleto de carga (Lab 11)
     PremieresCarousel/          Carrusel de estrenos (Lab 11)
@@ -83,16 +96,24 @@ src/
     MovieList/MovieList.jsx     Filtra y dibuja la cartelera; estado vacío
     MovieCard/MovieCard.jsx     Tarjeta con botón de favorita
     Footer/Footer.jsx           Contacto e información
+  pages/                        Páginas del Lab 12 (rutas)
+    HomePage/                   Cartelera desde la API
+    MoviesPage/                 Tabla, borrado y tres estados
+    MovieFormPage/              Formulario de alta
+    NotFoundPage/               Ruta desconocida
   hooks/
+    useMovies.js          GET de películas con carga, datos y error (Lab 12)
+    useScrollToHash.js    Desplazarse a /#seccion con React Router (Lab 12)
     useDebounce.js        Retardo (buscador y tamaño de ventana)
     useWindowSize.js      Tamaño de la ventana (Lab 11)
     usePremieres.js       Petición de estrenos: cargando, con datos o error (Lab 11)
     useToast.js           Aviso que se oculta solo (Lab 11)
   lib/
     adaptMovie.js         Patrón adaptador: datos crudos → modelo de la app (Lab 11)
-    api.js                Petición simulada con retardo y modo de fallo (Lab 11)
+    api.js                Petición simulada de estrenos (Lab 11)
+    httpClient.js         Axios: dirección base y traducción de errores (Lab 12)
+    moviesApi.js          listMovies, createMovie, deleteMovie (Lab 12)
   data/
-    movies.js             Cartelera en formato crudo de API
     premieres.js          Estrenos en formato crudo de API (Lab 11)
   styles/                 Arquitectura CSS (ver abajo)
   App.jsx                 Composición de la página
@@ -101,9 +122,11 @@ docs/
   INFORME-LAB09.md        Informe del Lab 09
   INFORME-LAB10.md        Informe del Lab 10
   INFORME-LAB11.md        Informe del Lab 11
+  INFORME-LAB12.md        Informe del Lab 12
   lab09-checklist.md      Cumplimiento del Lab 09
   lab10-checklist.md      Cumplimiento del Lab 10
   lab11-checklist.md      Cumplimiento del Lab 11
+  lab12-checklist.md      Cumplimiento del Lab 12
   evidence/
     jsx-errors.md         Errores JSX del Lab 09
     screenshots/          Capturas del Lab 09
@@ -148,6 +171,8 @@ Los componentes hijos no saben de dónde vienen los datos; solo usan lo que reci
 
 ## Datos
 
+> Desde el Lab 12 la cartelera ya no está en `src/data/movies.js`: llega de la API de Django con el mismo formato y pasa por el mismo adaptador. Los estrenos siguen simulados (Lab 11).
+
 `src/data/movies.js` y `src/data/premieres.js` guardan los registros como los enviaría una API: `movie_id`, `name`, `poster_file`, `overview`, `age_rating`, `score` (0–100) y `show_times` (texto con horas en formato 24 h); los estrenos añaden `release_date`. `adaptMovie()` los convierte al modelo que usan los componentes: `id`, `title`, `image`, `synopsis`, `classification`, `rating` (0–10, o `null` si no hay), `showtimes` (arreglo ordenado) y `releaseDate`.
 
 ## Arquitectura CSS
@@ -168,6 +193,91 @@ Los componentes hijos no saben de dónde vienen los datos; solo usan lo que reci
 | `header.css`, `hero.css`, `movie-list.css`, `movie-card.css`, `footer.css` | Estilos de cada componente |
 
 La cuadrícula usa `repeat(auto-fit, minmax(...))`, así que pasa de cuatro columnas en escritorio a una en el celular.
+
+## Lab 12: servicios web (Django + React con Axios)
+
+El trabajo de este laboratorio está en la rama **`lab12`**. El repositorio tiene los dos lados:
+
+| Lado | Carpeta | Dirección | Origen que espera |
+| --- | --- | --- | --- |
+| Servidor (API de Django + DRF) | `backend/` | `http://127.0.0.1:8000/api/` | Acepta peticiones del navegador **solo** desde `http://localhost:5173` y `http://127.0.0.1:5173` (variable `CORS_ALLOWED_ORIGINS`). |
+| Cliente (React + Vite) | raíz del repo | `http://localhost:5173/` | Llama a la API en `http://127.0.0.1:8000/api` (variable `VITE_API_URL`; ese valor es el predeterminado). |
+
+> Sobre la "API del laboratorio 8": este repositorio no tenía backend, así que en `backend/` se creó la API de películas con los mismos campos que ya usaba el adaptador del Lab 11 (`movie_id`, `name`, `overview`, `poster_file`, `age_rating`, `score`, `show_times`, `release_date`). Gracias a eso los componentes no cambiaron: solo cambió de dónde salen los datos.
+
+### Cómo levantar los dos lados (Windows, PowerShell)
+
+Se necesitan **dos terminales** abiertas a la vez.
+
+**Terminal 1 — API de Django**
+
+```powershell
+cd backend
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+copy .env.example .env
+python manage.py migrate
+python manage.py loaddata movies
+python manage.py test movies
+python manage.py runserver
+```
+
+- `loaddata movies` carga las 8 películas de la cartelera (`movies/fixtures/movies.json`).
+- Comprobar en el navegador: `http://127.0.0.1:8000/api/` (raíz de la API) y `http://127.0.0.1:8000/api/movies/` (listado).
+- Si PowerShell no deja activar el entorno: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` y volver a intentarlo.
+- La clave secreta, el modo DEBUG, los hosts y los orígenes de CORS se leen de `backend/.env` (no se sube al repositorio); `settings.py` no tiene credenciales escritas.
+
+**Terminal 2 — React**
+
+```powershell
+npm install
+npm run dev
+```
+
+Abrir `http://localhost:5173/`. Vite usa siempre el puerto 5173 (`strictPort`), porque es el origen autorizado en la API. Para apuntar a otra API, copiar `.env.example` a `.env.local` y cambiar `VITE_API_URL`.
+
+### Recursos que se consumen
+
+| Operación | Petición | Dónde se usa |
+| --- | --- | --- |
+| Listar | `GET /api/movies/` | Inicio (cartelera y banner) y **Manage movies** |
+| Crear | `POST /api/movies/` | **Manage movies → + Add movie** |
+| Eliminar | `DELETE /api/movies/{id}/` | Botón **Delete → Confirm** de cada fila |
+
+### Cliente de la API
+
+- `src/lib/httpClient.js`: instancia de Axios con la **dirección base en un solo sitio** (`API_BASE_URL`), tiempo máximo de 8 s y `toApiError()`, que convierte cualquier fallo en un mensaje legible (servidor apagado o CORS, 400 con los mensajes de cada campo, 404, 5xx).
+- `src/lib/moviesApi.js`: `listMovies()`, `createMovie()` y `deleteMovie()`. Ningún componente escribe una URL. Las respuestas pasan por `adaptMovie()` y el formulario se traduce al formato de la API con `toRawMovie()`.
+- `src/hooks/useMovies.js`: hace el `GET` dentro de `useEffect` al montar el componente y expone los tres estados (`loading`, `ready`, `error`), `reload()` (vuelve al esqueleto) y `refresh()` (pide otra vez sin quitar la tabla, tras borrar). Cancela la petición con `AbortController` si se sale de la página.
+
+### Pantallas
+
+| Ruta | Página | Qué hace |
+| --- | --- | --- |
+| `/` | `HomePage` | Cartelera y banner con datos de la API; estrenos del Lab 11 |
+| `/manage` | `MoviesPage` | Tabla con las películas; borrar con confirmación |
+| `/manage/new` | `MovieFormPage` | Formulario de alta con entradas controladas |
+
+Las rutas usan `react-router-dom`. La navegación tiene el enlace **Manage movies**.
+
+### Los tres estados de la pantalla de listado
+
+| Momento | Petición | Qué se muestra |
+| --- | --- | --- |
+| Al entrar | `GET /api/movies/` | **Carga:** filas grises con la forma de la tabla (`TableSkeleton`) |
+| La API responde 200 | — | **Datos:** tabla con afiche, título, clasificación, puntuación y horarios, y el botón Delete |
+| Sin respuesta (servidor apagado o CORS) | — | **Error:** recuadro rojo con el motivo, la dirección de la API, qué revisar y el botón **Try again** |
+
+### Errores provocados
+
+| Caso | Cómo se provoca | Resultado esperado |
+| --- | --- | --- |
+| CORS | En `backend/.env` dejar `CORS_ALLOWED_ORIGINS=http://localhost:3000` y reiniciar `runserver` | La consola del navegador muestra *"…has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource."* y la pantalla, el estado de error. Al restaurar el valor y reiniciar, vuelve a cargar. |
+| Validación | **+ Add movie → Save movie** con el título vacío | La API responde 400 `{"name": ["This field may not be blank."]}` y el mensaje aparece en rojo bajo **Title**. También: puntuación `150` u horario `25:00`. |
+| Servidor apagado | `Ctrl+C` en la terminal de Django con la app abierta y pulsar **Reload** | Estado de error (no pantalla en blanco). Al volver a levantar Django, **Try again** carga la tabla. |
+
+Detalle en el [informe del Lab 12](docs/INFORME-LAB12.md) y el [checklist](docs/lab12-checklist.md).
 
 ## Lab 11: comunicación entre componentes y hooks propios
 

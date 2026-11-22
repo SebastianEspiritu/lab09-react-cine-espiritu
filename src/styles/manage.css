@@ -1,0 +1,213 @@
+/* Lab 12: management pages (table, form) and request states */
+
+.navigation-links a[aria-current='page'] {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.catalog-status {
+  margin-block: var(--space-large);
+}
+
+.manage-page {
+  padding-block: var(--space-medium);
+}
+
+.manage-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-medium);
+  margin-bottom: var(--space-large);
+}
+
+.manage-header h1 {
+  margin: 0;
+  font-size: var(--font-size-xl);
+}
+
+.manage-header p {
+  margin: 0;
+}
+
+code {
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.3rem;
+  background: var(--color-surface);
+  color: var(--color-accent);
+  font-size: 0.9em;
+  overflow-wrap: anywhere;
+}
+
+/* Table */
+.table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: var(--color-surface);
+}
+
+.movies-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 44rem;
+}
+
+.movies-table th,
+.movies-table td {
+  padding: var(--space-small) var(--space-medium);
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.movies-table thead th {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.movies-table tbody tr:hover {
+  background: var(--color-row-hover);
+}
+
+.movies-table tbody tr.is-deleting {
+  opacity: 0.5;
+}
+
+.movies-table-thumb {
+  display: block;
+  width: var(--table-thumb-width);
+  height: auto;
+  border-radius: 0.3rem;
+}
+
+.movies-table-id {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: 400;
+}
+
+.movies-table-actions {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.table-footnote {
+  margin: 0;
+  padding: var(--space-small) var(--space-medium);
+  font-size: var(--font-size-small);
+}
+
+/* Table loading skeleton */
+.table-skeleton {
+  display: grid;
+  gap: var(--space-small);
+  padding: var(--space-medium);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: var(--color-surface);
+}
+
+.table-skeleton-row {
+  display: grid;
+  grid-template-columns: var(--table-thumb-width) repeat(auto-fit, minmax(4rem, 1fr));
+  align-items: center;
+  gap: var(--space-medium);
+}
+
+.table-skeleton-row .skeleton-line {
+  margin-inline: 0;
+}
+
+.table-skeleton-thumb {
+  height: 4.5rem;
+}
+
+/* Danger button and alert */
+.button--danger {
+  border-color: var(--color-danger);
+  background: var(--color-danger);
+  color: var(--color-background);
+}
+
+.button--danger:hover {
+  background: transparent;
+  color: var(--color-danger);
+}
+
+.alert {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-medium);
+  margin-bottom: var(--space-large);
+  padding: var(--space-medium);
+  border-radius: var(--radius-medium);
+}
+
+.alert p {
+  margin: 0;
+}
+
+.alert--danger {
+  border: 1px solid var(--color-danger);
+  background: var(--color-danger-surface);
+}
+
+/* Form */
+.movie-form {
+  display: grid;
+  gap: var(--space-large);
+  padding: var(--space-large);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: var(--color-surface);
+}
+
+.movie-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--space-medium) var(--space-large);
+}
+
+.movie-form-wide {
+  grid-column: 1 / -1;
+}
+
+.movie-form textarea.form-input {
+  resize: vertical;
+}
+
+.form-hint,
+.form-error {
+  margin: 0.35rem 0 0;
+  font-size: var(--font-size-small);
+}
+
+.form-hint {
+  color: var(--color-text-muted);
+}
+
+.form-error {
+  color: var(--color-danger);
+  font-weight: 600;
+}
+
+.form-field--invalid .form-input {
+  border-color: var(--color-danger);
+}
+
+.movie-form-preview {
+  width: 7.5rem;
+  height: auto;
+  border-radius: var(--radius-medium);
+}
+
+.movie-form-actions {
+  justify-content: flex-start;
+}

@@ -35,3 +35,10 @@
   --shadow-raised: 0 12px 32px rgb(0 0 0 / 0.45);
   --carousel-gap: 1.5rem;
 }
+
+/* Lab 12 */
+:root {
+  --color-danger-surface: #3a1f24;
+  --color-row-hover: #222735;
+  --table-thumb-width: 3rem;
+}

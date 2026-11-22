@@ -1,0 +1,114 @@
+[
+  {
+    "model": "movies.movie",
+    "pk": 1,
+    "fields": {
+      "name": "Beyond Orion",
+      "overview": "A pilot follows a mysterious signal beyond the last inhabited star system.",
+      "poster_file": "beyond-orion.svg",
+      "age_rating": "PG-13",
+      "score": 84,
+      "show_times": "14:00 17:00 20:00",
+      "release_date": null,
+      "created_at": "2026-11-21T12:00:00Z"
+    }
+  },
+  {
+    "model": "movies.movie",
+    "pk": 2,
+    "fields": {
+      "name": "The Last Lighthouse",
+      "overview": "A lighthouse keeper and her son race to guide a missing ship home before dawn.",
+      "poster_file": "the-last-lighthouse.svg",
+      "age_rating": "PG",
+      "score": 78,
+      "show_times": "13:30 16:00 18:30",
+      "release_date": null,
+      "created_at": "2026-11-21T12:00:00Z"
+    }
+  },
+  {
+    "model": "movies.movie",
+    "pk": 3,
+    "fields": {
+      "name": "Midnight Train",
+      "overview": "A detective boards an overnight train where every passenger hides a clue.",
+      "poster_file": "midnight-train.svg",
+      "age_rating": "PG-13",
+      "score": 81,
+      "show_times": "21:30 19:00 16:30",
+      "release_date": null,
+      "created_at": "2026-11-21T12:00:00Z"
+    }
+  },
+  {
+    "model": "movies.movie",
+    "pk": 4,
+    "fields": {
+      "name": "Paper Wings",
+      "overview": "Two siblings build a flying machine to enter their town's annual invention contest.",
+      "poster_file": "paper-wings.svg",
+      "age_rating": "G",
+      "score": 76,
+      "show_times": "12:00 14:30 17:00",
+      "release_date": null,
+      "created_at": "2026-11-21T12:00:00Z"
+    }
+  },
+  {
+    "model": "movies.movie",
+    "pk": 5,
+    "fields": {
+      "name": "Desert Echoes",
+      "overview": "An archaeologist discovers a buried city and must protect its fragile water source.",
+      "poster_file": "desert-echoes.svg",
+      "age_rating": "PG-13",
+      "score": 80,
+      "show_times": "15:00 18:00 21:00",
+      "release_date": null,
+      "created_at": "2026-11-21T12:00:00Z"
+    }
+  },
+  {
+    "model": "movies.movie",
+    "pk": 6,
+    "fields": {
+      "name": "The Hidden Garden",
+      "overview": "A young gardener finds a secret courtyard that brings a divided neighborhood together.",
+      "poster_file": "the-hidden-garden.svg",
+      "age_rating": "G",
+      "score": 79,
+      "show_times": "12:30 15:00 17:30",
+      "release_date": null,
+      "created_at": "2026-11-21T12:00:00Z"
+    }
+  },
+  {
+    "model": "movies.movie",
+    "pk": 7,
+    "fields": {
+      "name": "City of Rhythm",
+      "overview": "A street musician forms an unlikely band to save a neighborhood music hall.",
+      "poster_file": "city-of-rhythm.svg",
+      "age_rating": "PG",
+      "score": 82,
+      "show_times": "14:00 16:30 19:00",
+      "release_date": null,
+      "created_at": "2026-11-21T12:00:00Z"
+    }
+  },
+  {
+    "model": "movies.movie",
+    "pk": 8,
+    "fields": {
+      "name": "After the Storm",
+      "overview": "Three old friends reunite to rebuild a coastal workshop after a powerful storm.",
+      "poster_file": "after-the-storm.svg",
+      "age_rating": "PG-13",
+      "score": 77,
+      "show_times": "15:30 18:30 21:00",
+      "release_date": null,
+      "created_at": "2026-11-21T12:00:00Z"
+    }
+  }
+]

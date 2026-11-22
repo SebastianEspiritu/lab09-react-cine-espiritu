@@ -32,3 +32,27 @@ function adaptMovie(raw) {
 }
 
 export default adaptMovie
+
+// Lab 12: the way back, from the form to the body the API expects.
+export const RAW_TO_MODEL_FIELDS = {
+  name: 'title',
+  overview: 'synopsis',
+  poster_file: 'posterFile',
+  age_rating: 'classification',
+  score: 'score',
+  show_times: 'showtimes',
+  release_date: 'releaseDate',
+}
+
+export function toRawMovie(movie) {
+  return {
+    name: movie.title,
+    overview: movie.synopsis,
+    poster_file: movie.posterFile,
+    age_rating: movie.classification,
+    // Sent as typed: the API validates it and answers with a message if it is wrong.
+    score: movie.score === '' ? 0 : movie.score,
+    show_times: movie.showtimes.trim().split(/[\s,]+/).filter(Boolean).join(' '),
+    release_date: movie.releaseDate || null,
+  }
+}
