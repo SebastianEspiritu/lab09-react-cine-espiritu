@@ -4,10 +4,12 @@ import Footer from './components/Footer/Footer.jsx'
 import Header from './components/Header/Header.jsx'
 import Toast from './components/Toast/Toast.jsx'
 import useToast from './hooks/useToast.js'
+import CatalogPage from './pages/CatalogPage/CatalogPage.jsx'
 import HomePage from './pages/HomePage/HomePage.jsx'
 import MovieFormPage from './pages/MovieFormPage/MovieFormPage.jsx'
 import MoviesPage from './pages/MoviesPage/MoviesPage.jsx'
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage.jsx'
+import ProductFormPage from './pages/ProductFormPage/ProductFormPage.jsx'
 
 // v2: since Lab 12 the ids come from the API (numbers), not the old slugs.
 const FAVORITES_STORAGE_KEY = 'cinema-espiritu:favorites:v2'
@@ -62,6 +64,9 @@ function App() {
           <Route path="/" element={<HomePage favoriteIds={favoriteIds} onToggleFavorite={toggleFavorite} />} />
           <Route path="/manage" element={<MoviesPage onNotify={showToast} onMovieDeleted={forgetFavorite} />} />
           <Route path="/manage/new" element={<MovieFormPage onNotify={showToast} />} />
+          <Route path="/shop" element={<CatalogPage onNotify={showToast} />} />
+          <Route path="/shop/new" element={<ProductFormPage onNotify={showToast} />} />
+          <Route path="/shop/:productId/edit" element={<ProductFormPage onNotify={showToast} />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>

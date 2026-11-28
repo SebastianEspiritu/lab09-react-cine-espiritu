@@ -32,3 +32,6 @@ backend/venv/
 backend/db.sqlite3
 __pycache__/
 *.pyc
+
+# Uploaded product images (recreate them with: python manage.py seed_catalog)
+backend/media/

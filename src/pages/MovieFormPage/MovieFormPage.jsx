@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Button from '../../components/Button/Button.jsx'
 import FormField from '../../components/FormField/FormField.jsx'
-import { createMovie } from '../../lib/moviesApi.js'
+import movieService from '../../services/movieService.js'
 
 const POSTERS = [
   'after-the-storm.svg',
@@ -55,7 +55,7 @@ function MovieFormPage({ onNotify }) {
     setFormError(null)
     setFieldErrors({})
     try {
-      const created = await createMovie(values)
+      const created = await movieService.create(values)
       onNotify(`★ “${created.title}” was added`, 'success')
       navigate('/manage')
     } catch (error) {

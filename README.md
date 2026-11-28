@@ -1,6 +1,6 @@
-# Cinema Espiritu — Laboratorios 09 a 12
+# Cinema Espiritu — Laboratorios 09 a 13
 
-Cartelera de cine hecha con React, JSX y Vite para el curso **Desarrollo de Aplicaciones Empresariales** (sección 4-C24-B). El proyecto es acumulativo: el **Lab 09** armó la cartelera con componentes y props; el **Lab 10** le agrega un botón reutilizable, favoritas que se guardan en el navegador y un buscador con retardo; el **Lab 11** (rama `lab11`) añade comunicación entre componentes hermanos, hooks propios, un adaptador de datos, avisos emergentes y una sección de estrenos con estados de carga y de error; el **Lab 12** (rama `lab12`) conecta la app con una API de Django (carpeta `backend/`) mediante Axios, con CORS, listado, alta y borrado. Las películas, los afiches SVG y los datos de contacto son ficticios.
+Cartelera de cine hecha con React, JSX y Vite para el curso **Desarrollo de Aplicaciones Empresariales** (sección 4-C24-B). El proyecto es acumulativo: el **Lab 09** armó la cartelera con componentes y props; el **Lab 10** le agrega un botón reutilizable, favoritas que se guardan en el navegador y un buscador con retardo; el **Lab 11** (rama `lab11`) añade comunicación entre componentes hermanos, hooks propios, un adaptador de datos, avisos emergentes y una sección de estrenos con estados de carga y de error; el **Lab 12** (rama `lab12`) conecta la app con una API de Django (carpeta `backend/`) mediante Axios, con CORS, listado, alta y borrado; el **Lab 13** (rama `lab13`) agrega la tienda del cine (snacks, bebidas y merchandising): app `catalog` en Django con categorías y productos anidados, y una capa de servicios en React. Las películas, los afiches SVG y los datos de contacto son ficticios.
 
 **Autor:** Sebastián Espíritu
 
@@ -25,6 +25,7 @@ Cartelera de cine hecha con React, JSX y Vite para el curso **Desarrollo de Apli
 
    | Rama | Contenido |
    | --- | --- |
+   | `lab13` | Lab 13: tienda (catálogo con categorías y productos) en Django + capa de servicios en React (ver [Lab 13](#lab-13-estructura-de-comercio-electrónico)) |
    | `lab12` | Lab 12: API de Django en `backend/` + React consumiéndola con Axios (ver [cómo levantar los dos lados](#lab-12-servicios-web-django--react-con-axios)) |
    | `lab11` | Lab 11: estado elevado, hooks propios, adaptador, avisos y estrenos con carga y error |
    | `main` | Labs 09 y 10: cartelera, botón reutilizable, favoritas y buscador |
@@ -67,14 +68,17 @@ Declaradas en `package.json` y fijadas en `package-lock.json`:
 
 `.gitignore` excluye `node_modules/`, `dist/`, los archivos `.env`, el entorno virtual y la base de datos SQLite del backend.
 
-El backend usa `Django`, `djangorestframework`, `django-cors-headers` y `python-dotenv` (`backend/requirements.txt`).
+El backend usa `Django`, `djangorestframework`, `django-cors-headers`, `python-dotenv` y `Pillow` (imágenes, Lab 13), listados en `backend/requirements.txt`.
 
 ## Estructura del proyecto
 
 ```text
-backend/                  API de Django del Lab 12
-  config/                 settings.py (lee .env), urls.py
-  movies/                 Modelo Movie, serializador, vistas, rutas, fixture y pruebas
+backend/                  API de Django (Labs 12 y 13)
+  config/                 settings.py (lee .env, MEDIA), urls.py (un solo router para /api/)
+  movies/                 Lab 12: modelo Movie, serializador, vistas, fixture y pruebas
+  catalog/                Lab 13: Category y Product, serializadores anidados, vistas, admin, pruebas
+    management/commands/seed_catalog.py   Crea 3 categorías y 9 productos con imagen
+  media/                  Imágenes subidas (no se sube a Git)
   requirements.txt
   .env.example            Variables de entorno (copiar a .env)
 public/
@@ -83,6 +87,9 @@ public/
 src/
   components/
     Button/Button.jsx           Botón reutilizable con variantes; `to` para rutas (Lab 10/12)
+    ProductCard/                Tarjeta de producto: imagen, categoría, precio, stock, editar/borrar (Lab 13)
+    CategoryFilter/             Filtro por categoría con datos de la API (Lab 13)
+    ProductGridSkeleton/        Esqueleto de carga del catálogo (Lab 13)
     FormField/                  Etiqueta + campo + mensaje de error de la API (Lab 12)
     TableSkeleton/              Esqueleto de carga de la tabla (Lab 12)
     ErrorMessage/               Mensaje de error con botón para reintentar (Lab 11)
@@ -101,7 +108,16 @@ src/
     MoviesPage/                 Tabla, borrado y tres estados
     MovieFormPage/              Formulario de alta
     NotFoundPage/               Ruta desconocida
+    CatalogPage/                Tienda: catálogo, filtro por categoría y borrado (Lab 13)
+    ProductFormPage/            Alta y edición de producto (Lab 13)
+  services/               Capa de servicios: lo único que habla con la API (Lab 13)
+    apiClient.js          Axios con la dirección base en un solo sitio + apiRequest + errores
+    productService.js     list, get, create, update, remove
+    categoryService.js    list, get, create, update, remove
+    movieService.js       list, create, remove (películas del Lab 12)
   hooks/
+    useResource.js        Petición por servicio con carga, datos y error (Lab 13)
+    useProducts.js / useProduct.js / useCategories.js   Hooks del catálogo (Lab 13)
     useMovies.js          GET de películas con carga, datos y error (Lab 12)
     useScrollToHash.js    Desplazarse a /#seccion con React Router (Lab 12)
     useDebounce.js        Retardo (buscador y tamaño de ventana)
@@ -111,8 +127,7 @@ src/
   lib/
     adaptMovie.js         Patrón adaptador: datos crudos → modelo de la app (Lab 11)
     api.js                Petición simulada de estrenos (Lab 11)
-    httpClient.js         Axios: dirección base y traducción de errores (Lab 12)
-    moviesApi.js          listMovies, createMovie, deleteMovie (Lab 12)
+    adaptProduct.js       Adaptadores de producto y categoría, cuerpo del formulario, precio en S/ (Lab 13)
   data/
     premieres.js          Estrenos en formato crudo de API (Lab 11)
   styles/                 Arquitectura CSS (ver abajo)
@@ -123,10 +138,13 @@ docs/
   INFORME-LAB10.md        Informe del Lab 10
   INFORME-LAB11.md        Informe del Lab 11
   INFORME-LAB12.md        Informe del Lab 12
+  INFORME-LAB13.md        Informe del Lab 13
+  diagrams/catalog-er.png Diagrama del catálogo (Lab 13)
   lab09-checklist.md      Cumplimiento del Lab 09
   lab10-checklist.md      Cumplimiento del Lab 10
   lab11-checklist.md      Cumplimiento del Lab 11
   lab12-checklist.md      Cumplimiento del Lab 12
+  lab13-checklist.md      Cumplimiento del Lab 13
   evidence/
     jsx-errors.md         Errores JSX del Lab 09
     screenshots/          Capturas del Lab 09
@@ -194,6 +212,132 @@ Los componentes hijos no saben de dónde vienen los datos; solo usan lo que reci
 
 La cuadrícula usa `repeat(auto-fit, minmax(...))`, así que pasa de cuatro columnas en escritorio a una en el celular.
 
+## Lab 13: estructura de comercio electrónico
+
+El trabajo está en la rama **`lab13`**, que parte de `lab12`. La app de cine ahora tiene una **tienda** (*Shop*) con snacks, bebidas y merchandising.
+
+### Reparto entre servidor y cliente
+
+| Lado | Carpeta | Qué hace |
+| --- | --- | --- |
+| **Servidor** (Django + DRF) | `backend/` | Guarda los datos y las imágenes, valida y expone la API REST. Apps: `movies` (Lab 12) y **`catalog`** (Lab 13), una por responsabilidad. El administrador de Django sirve para dar de alta categorías y productos. |
+| **Cliente** (React + Vite) | raíz del repo | Pinta las pantallas. **Solo** la carpeta `src/services/` habla con la API; páginas y hooks llaman a los servicios. |
+
+Orígenes: la API acepta peticiones del navegador solo desde `http://localhost:5173` y `http://127.0.0.1:5173` (CORS). React llama a `http://127.0.0.1:8000/api` (`VITE_API_URL`).
+
+### Diagrama del catálogo
+
+![Diagrama del catálogo](docs/diagrams/catalog-er.png)
+
+```mermaid
+erDiagram
+    CATEGORY ||--o{ PRODUCT : "has products"
+    CATEGORY {
+        bigint id PK
+        varchar name UK
+        varchar slug UK
+        varchar description
+    }
+    PRODUCT {
+        bigint id PK
+        bigint category_id FK
+        varchar name
+        text description
+        decimal price
+        int stock
+        varchar image
+        datetime created_at
+        datetime updated_at
+    }
+```
+
+### Cómo levantarlo (después de bajar la rama `lab13`)
+
+**Terminal 1: API**
+
+```powershell
+cd backend
+.\.venv\Scripts\Activate.ps1          # si no existe: python -m venv .venv
+pip install -r requirements.txt       # agrega Pillow (imágenes)
+python manage.py migrate              # crea las tablas del catálogo
+python manage.py seed_catalog         # 3 categorías y 9 productos con imagen
+python manage.py createsuperuser      # para entrar a /admin/
+python manage.py test                 # pruebas de movies y catalog
+python manage.py runserver
+```
+
+**Terminal 2: React**
+
+```powershell
+npm install
+npm run dev
+```
+
+Abrir `http://localhost:5173/shop`. Administrador: `http://127.0.0.1:8000/admin/`.
+
+### Tabla de la API
+
+| Recurso | Método | Dirección | Respuesta |
+| --- | --- | --- | --- |
+| Productos | GET | `/api/products/` | Lista con la **categoría anidada** (`id`, `name`, `slug`, `description`) |
+| Productos por categoría | GET | `/api/products/?category=snacks` (slug o id) | Lista filtrada |
+| Un producto | GET | `/api/products/{id}/` | Producto con su categoría |
+| Crear producto | POST | `/api/products/` | 201. JSON o `multipart/form-data` si lleva imagen; se envía `category_id` |
+| Modificar producto | PATCH / PUT | `/api/products/{id}/` | 200 con el producto actualizado |
+| Eliminar producto | DELETE | `/api/products/{id}/` | 204 |
+| Categorías | GET | `/api/categories/` | Lista con `product_count` |
+| Una categoría / crear / modificar | GET, POST, PATCH, PUT | `/api/categories/` y `/api/categories/{id}/` | — |
+| Eliminar categoría | DELETE | `/api/categories/{id}/` | 204, o **409** si todavía tiene productos |
+| Imágenes | GET | `/media/products/...png` | Solo con `DEBUG=True` |
+
+Ejemplo de un producto (una sola petición trae lo que la tarjeta necesita):
+
+```json
+{
+  "id": 1,
+  "name": "Large Popcorn",
+  "description": "Fresh buttered popcorn in a 130 oz bucket.",
+  "price": "18.50",
+  "stock": 40,
+  "is_available": true,
+  "image": "http://127.0.0.1:8000/media/products/large-popcorn.png",
+  "category": { "id": 3, "name": "Snacks", "slug": "snacks", "description": "Popcorn, nachos and sweets to enjoy during the movie." },
+  "created_at": "2026-11-27T22:10:00-05:00",
+  "updated_at": "2026-11-27T22:10:00-05:00"
+}
+```
+
+El serializador anida `CategorySummarySerializer` como solo lectura y recibe la categoría por `category_id`. La vista usa `select_related('category')`, así que el listado completo sale en **una sola consulta SQL** (lo comprueba la prueba `test_product_list_uses_a_single_query`).
+
+### Capa de servicios (cliente)
+
+| Archivo | Qué contiene |
+| --- | --- |
+| `src/services/apiClient.js` | Instancia de Axios con la **dirección base en un solo sitio**, `apiRequest()` (la única función que ejecuta peticiones) y `toApiError()` (mensajes claros por estado y por campo) |
+| `src/services/productService.js` | `list({ categoryId })`, `get(id)`, `create(values)`, `update(id, values)`, `remove(id)` |
+| `src/services/categoryService.js` | `list()`, `get(id)`, `create(data)`, `update(id, data)`, `remove(id)` |
+| `src/services/movieService.js` | `list()`, `create()`, `remove()` (Lab 12, movido aquí) |
+
+**Ningún componente importa Axios ni escribe una URL.** Se puede comprobar así:
+
+```powershell
+Select-String -Path src\components\*\*.jsx, src\pages\*\*.jsx, src\hooks\*.js -Pattern "axios|http://"
+```
+
+El comando no devuelve nada.
+
+### Pantallas
+
+| Ruta | Página | Petición al entrar | Qué hace |
+| --- | --- | --- | --- |
+| `/shop` | `CatalogPage` | `GET /products/` y `GET /categories/` | Tarjetas con imagen, categoría, precio en S/ y stock. Filtro por categoría (chips cargados del API, guardado en `?category=`). Tres estados: esqueleto, tarjetas y error con reintento. Borrar con confirmación. |
+| `/shop/new` | `ProductFormPage` | `GET /categories/` | Formulario controlado; categorías del API en la lista desplegable; `POST`; vuelve al catálogo. |
+| `/shop/:id/edit` | `ProductFormPage` | `GET /products/{id}/` y `GET /categories/` | El mismo formulario con los datos cargados; `PATCH`; vuelve al catálogo. |
+
+Después de crear, editar o borrar, el catálogo muestra el cambio sin recargar la página: navega con React Router y vuelve a pedir la lista, o, al borrar, refresca la lista y los contadores de cada categoría.
+
+Detalle en el [informe del Lab 13](docs/INFORME-LAB13.md) y el [checklist](docs/lab13-checklist.md).
+
 ## Lab 12: servicios web (Django + React con Axios)
 
 El trabajo de este laboratorio está en la rama **`lab12`**. El repositorio tiene los dos lados:
@@ -247,8 +391,8 @@ Abrir `http://localhost:5173/`. Vite usa siempre el puerto 5173 (`strictPort`), 
 
 ### Cliente de la API
 
-- `src/lib/httpClient.js`: instancia de Axios con la **dirección base en un solo sitio** (`API_BASE_URL`), tiempo máximo de 8 s y `toApiError()`, que convierte cualquier fallo en un mensaje legible (servidor apagado o CORS, 400 con los mensajes de cada campo, 404, 5xx).
-- `src/lib/moviesApi.js`: `listMovies()`, `createMovie()` y `deleteMovie()`. Ningún componente escribe una URL. Las respuestas pasan por `adaptMovie()` y el formulario se traduce al formato de la API con `toRawMovie()`.
+- `src/lib/httpClient.js` (desde el Lab 13: `src/services/apiClient.js`): instancia de Axios con la **dirección base en un solo sitio** (`API_BASE_URL`), tiempo máximo de 8 s y `toApiError()`, que convierte cualquier fallo en un mensaje legible (servidor apagado o CORS, 400 con los mensajes de cada campo, 404, 5xx).
+- `src/lib/moviesApi.js` (desde el Lab 13: `src/services/movieService.js` con `list`, `create` y `remove`): `listMovies()`, `createMovie()` y `deleteMovie()`. Ningún componente escribe una URL. Las respuestas pasan por `adaptMovie()` y el formulario se traduce al formato de la API con `toRawMovie()`.
 - `src/hooks/useMovies.js`: hace el `GET` dentro de `useEffect` al montar el componente y expone los tres estados (`loading`, `ready`, `error`), `reload()` (vuelve al esqueleto) y `refresh()` (pide otra vez sin quitar la tabla, tras borrar). Cancela la petición con `AbortController` si se sale de la página.
 
 ### Pantallas

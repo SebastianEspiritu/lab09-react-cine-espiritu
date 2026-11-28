@@ -3,9 +3,9 @@ import axios from 'axios'
 // The API base URL lives here and nowhere else. Change it with VITE_API_URL.
 export const API_BASE_URL = (import.meta.env.VITE_API_URL ?? 'http://127.0.0.1:8000/api').replace(/\/+$/, '')
 
-const httpClient = axios.create({
+const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 8000,
+  timeout: 15000, // image uploads can take a moment
   headers: { Accept: 'application/json' },
 })
 
@@ -62,6 +62,10 @@ export function toApiError(error, fieldNames = {}) {
     return new ApiError(message, { status, fieldErrors, cause: error })
   }
 
+  if (data && typeof data === 'object' && typeof data.detail === 'string' && status !== 404) {
+    return new ApiError(`${data.detail} (${status})`, { status, cause: error })
+  }
+
   if (status === 404) {
     return new ApiError('The API could not find that record (404). It may have been deleted already.', { status, cause: error })
   }
@@ -73,4 +77,17 @@ export function toApiError(error, fieldNames = {}) {
   return new ApiError(`The API answered with an unexpected status (${status}).`, { status, cause: error })
 }
 
-export default httpClient
+// The only door to the API used by the services: runs the request, returns
+// the body and turns any failure into an ApiError. Aborted requests are
+// re-thrown untouched so the caller can ignore them.
+export async function apiRequest(config, { fieldNames } = {}) {
+  try {
+    const { data } = await apiClient.request(config)
+    return data
+  } catch (error) {
+    if (axios.isCancel(error)) throw error
+    throw toApiError(error, fieldNames)
+  }
+}
+
+export default apiClient

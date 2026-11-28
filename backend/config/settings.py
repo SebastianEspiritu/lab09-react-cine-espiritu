@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     # Local
     'movies',
+    'catalog',
 ]
 
 MIDDLEWARE = [
@@ -97,6 +98,10 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+
+# Uploaded files (product images). Served by Django only while DEBUG is on.
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

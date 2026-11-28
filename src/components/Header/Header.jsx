@@ -18,6 +18,7 @@ function Header({ favoritesCount }) {
             <li><Link to="/#coming-soon">Coming soon</Link></li>
             <li><Link to="/#now-showing">Now showing</Link></li>
             <li><a href="#contact">Contact</a></li>
+            <li><NavLink to="/shop">Shop</NavLink></li>
             <li><NavLink to="/manage">Manage movies</NavLink></li>
             <li>
               <span className="favorites-badge" aria-live="polite">

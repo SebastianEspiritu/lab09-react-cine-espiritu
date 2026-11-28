@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { listMovies } from '../lib/moviesApi.js'
+import movieService from '../services/movieService.js'
 
 // GET /movies/ when the component mounts, with the three states of a request:
 // 'loading', 'ready' (data) and 'error'.
@@ -12,7 +12,7 @@ function useMovies() {
   useEffect(() => {
     const controller = new AbortController()
 
-    listMovies({ signal: controller.signal })
+    movieService.list({ signal: controller.signal })
       .then((movies) => setResult({ status: 'ready', movies, error: null, isRefreshing: false }))
       .catch((error) => {
         // An aborted request belongs to a screen that is gone: ignore it.

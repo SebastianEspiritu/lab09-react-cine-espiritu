@@ -3,8 +3,8 @@ import Button from '../../components/Button/Button.jsx'
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage.jsx'
 import TableSkeleton from '../../components/TableSkeleton/TableSkeleton.jsx'
 import useMovies from '../../hooks/useMovies.js'
-import { API_BASE_URL } from '../../lib/httpClient.js'
-import { deleteMovie } from '../../lib/moviesApi.js'
+import { API_BASE_URL } from '../../services/apiClient.js'
+import movieService from '../../services/movieService.js'
 
 // Management page: GET the movies when it mounts and DELETE them one by one.
 function MoviesPage({ onNotify, onMovieDeleted }) {
@@ -17,7 +17,7 @@ function MoviesPage({ onNotify, onMovieDeleted }) {
     setDeletingId(movie.id)
     setDeleteError(null)
     try {
-      await deleteMovie(movie.id)
+      await movieService.remove(movie.id)
       onMovieDeleted(movie.id)
       onNotify(`🗑 “${movie.title}” was deleted`, 'info')
       // Ask the API again so the table shows what is really stored.
